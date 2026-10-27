@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-[#0d0d0e] text-[#e4e2dd]" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dîner Presque Parfait — Gastronomie entre Amis</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Cormorant Garamond', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        champagne: {
+                            100: '#f7f4ee',
+                            200: '#ece5d8',
+                            300: '#dfd3be',
+                            400: '#cca876',
+                            500: '#b89255',
+                        },
+                        onyx: {
+                            900: '#0d0d0e',
+                            800: '#141416',
+                            700: '#1e1e22',
+                            600: '#2b2b31',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* THÈME SOMBRE (Par défaut) */
+        .theme-dark {
+            background-color: #0d0d0e;
+            color: #e4e2dd;
+        }
+        .theme-dark .menu-card, .theme-dark .history-card, .theme-dark .chef-card {
+            background-color: #141416;
+            border-color: rgba(204, 168, 118, 0.25);
+        }
+        .theme-dark .parchment-modal {
+            background: linear-gradient(135deg, #171513 0%, #12100e 50%, #171513 100%);
+            border: 2px solid #cca876;
+            color: #e4e2dd;
+        }
+        .theme-dark header, .theme-dark nav {
+            background-color: rgba(13, 13, 14, 0.95);
+        }
+        .theme-dark .vote-item-box {
+            background-color: rgba(20, 20, 22, 0.6);
+            border: 1px solid #2b2b31;
+        }
+
+        /* THÈME BLANC CASSÉ / CRÈME / MARRON CLAIR */
+        .theme-light {
+            background-color: #f3eee3;
+            color: #3e3226;
+        }
+        .theme-light header, .theme-light nav {
+            background-color: rgba(243, 238, 227, 0.95);
+            border-color: rgba(164, 133, 99, 0.3) !important;
+        }
+        .theme-light .menu-card, .theme-light .history-card, .theme-light .chef-card {
+            background-color: #faf6ee;
+            border: 1px solid rgba(164, 133, 99, 0.35);
+            box-shadow: 0 10px 25px -5px rgba(80, 60, 40, 0.06);
+            color: #3e3226;
+        }
+        .theme-light .parchment-modal {
+            background: linear-gradient(135deg, #fcf9f2 0%, #ede3d2 50%, #fcf9f2 100%);
+            border: 2px solid #a48563;
+            color: #3e3226;
+            box-shadow: 0 20px 40px rgba(80, 60, 40, 0.15);
+        }
+        .theme-light input, .theme-light select {
+            background-color: #f8f4ec !important;
+            color: #3e3226 !important;
+            border-color: #d1c2ab !important;
+        }
+        .theme-light .bg-onyx-900 {
+            background-color: #eae1d0 !important;
+        }
+        .theme-light .bg-onyx-800 {
+            background-color: #f5efe3 !important;
+        }
+        .theme-light .vote-item-box {
+            background-color: #f8f3e9 !important;
+            border: 1px solid #dcd0bc !important;
+            color: #3e3226 !important;
+        }
+        .theme-light .text-stone-400 {
+            color: #7a6b5c !important;
+        }
+        .theme-light .text-stone-300 {
+            color: #594a3c !important;
+        }
+        .theme-light .text-champagne-100 {
+            color: #2c2219 !important;
+        }
+        .theme-light .text-champagne-400 {
+            color: #8c6a47 !important;
+        }
+        .theme-light .border-stone-800 {
+            border-color: #dcd0bc !important;
+        }
+
+        /* EFFET PARCHEMIN / PAPYRUS POUR LA MODALE DU MENU */
+        .parchment-modal {
+            border-radius: 25px 8px 25px 8px;
+            position: relative;
+        }
+        .parchment-modal::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            right: 6px;
+            bottom: 6px;
+            border: 1px dashed rgba(164, 133, 99, 0.35);
+            border-radius: 20px 6px 20px 6px;
+            pointer-events: none;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 24px;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: linear-gradient(to right, #a48563 0%, #a48563 var(--range-progress, 70%), #d1c2ab var(--range-progress, 70%), #d1c2ab 100%);
+            border-radius: 3px;
+            border: 1px solid rgba(164, 133, 99, 0.3);
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #a48563;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -8px;
+            border: 2px solid #f3eee3;
+            box-shadow: 0 0 10px rgba(164, 133, 99, 0.4);
+            transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+
+        input[type=range]::-moz-range-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #d1c2ab;
+            border-radius: 3px;
+            border: 1px solid rgba(164, 133, 99, 0.3);
+        }
+
+        input[type=range]::-moz-range-progress {
+            background-color: #a48563;
+            height: 6px;
+            border-radius: 3px;
+        }
+
+        input[type=range]::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #a48563;
+            cursor: pointer;
+            border: 2px solid #f3eee3;
+            box-shadow: 0 0 10px rgba(164, 133, 99, 0.4);
+            transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+
+        .nav-item-active {
+            color: #a48563;
+        }
+        .nav-item-active::after {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 4px;
+            background-color: #a48563;
+            border-radius: 50%;
+            margin: 2px auto 0;
+        }
+
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in {
+            animation: fadeInSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .menu-card, .chef-card, .history-card {
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .menu-card:hover, .chef-card:hover, .history-card:hover {
+            border-color: rgba(164, 133, 99, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px -8px rgba(80, 60, 40, 0.15);
+        }
+        button, select, input {
+            transition: all 0.2s ease;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans select-none pb-20 theme-dark" id="body-app">
+
+    <!-- En-tête -->
+    <header class="sticky top-0 z-40 backdrop-blur-md border-b border-champagne-400/20 px-6 py-4 flex items-center justify-between">
+        <div class="flex flex-col">
+            <span class="text-[10px] uppercase tracking-[0.3em] text-champagne-400 font-medium">Gastronomie & Convivialité</span>
+            <h1 class="font-serif text-xl tracking-wide font-normal text-champagne-100">Le Dîner Presque Parfait</h1>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleTheme()" class="text-base p-1 hover:scale-110 transition" id="theme-toggle-btn" title="Changer de thème">
+                🌙
+            </button>
+            <button onclick="toggleAdminAuth()" class="text-stone-400 hover:text-champagne-400 transition text-sm p-1" title="Mode Administration">
+                <i id="admin-lock-icon" class="fa-solid fa-lock"></i>
+            </button>
+            <span id="sync-status" class="text-[9px] uppercase tracking-wider text-amber-500/80 border border-amber-500/30 px-2 py-0.5">Connexion...</span>
+        </div>
+    </header>
+
+    <!-- Zone Principale -->
+    <main class="flex-1 overflow-y-auto px-4 py-6 max-w-md mx-auto w-full space-y-6">
+
+        <!-- SECTION 1: ACCUEIL & SOIRÉE DU MOMENT -->
+        <section id="sec-home" class="space-y-6 animate-fade-in">
+            <div id="active-dinner-card" class="menu-card rounded-sm p-6 relative">
+                <div class="menu-card-inner p-5 space-y-5 text-center">
+                    <div class="border-b border-champagne-400/20 pb-3">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[9px] uppercase tracking-[0.25em] text-champagne-400">Dîner à la Une</span>
+                            <button id="home-edit-btn" onclick="openEditDinnerModalFromHome()" class="hidden text-amber-500 hover:text-amber-400 text-[10px] uppercase tracking-wider font-medium">
+                                <i class="fa-solid fa-pen-to-square mr-1"></i> Modifier mon menu
+                            </button>
+                        </div>
+                        <h2 id="home-host-name" class="font-serif text-2xl text-champagne-100 italic">Aucune soirée planifiée</h2>
+                        <p id="home-date" class="text-[11px] text-stone-400 mt-1">--.--.----</p>
+                    </div>
+
+                    <!-- Plats affichés dynamiquement (masqués si vides) -->
+                    <div id="home-menu-container" class="space-y-3 py-2 text-xs font-light">
+                        <span id="home-theme" class="text-[10px] uppercase tracking-widest text-stone-400 italic block mb-3">— Thème Libre —</span>
+                    </div>
+
+                    <div class="pt-4 border-t border-champagne-400/20 flex space-x-3">
+                        <button onclick="switchTab('vote')" class="flex-1 py-3 bg-champagne-400 text-onyx-900 font-medium text-xs uppercase tracking-widest hover:opacity-90 transition">
+                            Exprimer un Vote
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carnet des Dîners Suivants -->
+            <div class="space-y-3">
+                <h3 class="font-serif text-lg text-champagne-100 italic border-b border-stone-800 pb-2">Carnet des Dîners Suivants</h3>
+                <div id="dinners-upcoming-list" class="space-y-3"></div>
+            </div>
+
+            <!-- Carnet des Dîners Passés -->
+            <div class="space-y-3">
+                <h3 class="font-serif text-lg text-champagne-100 italic border-b border-stone-800 pb-2">Carnet des Dîners Passés</h3>
+                <div id="dinners-history-list" class="space-y-3"></div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: CRÉATION SOIRÉE ET MENU -->
+        <section id="sec-create" class="hidden space-y-5">
+            <div class="menu-card rounded-sm p-6">
+                <div class="text-center border-b border-champagne-400/20 pb-4 mb-5">
+                    <span class="text-[9px] uppercase tracking-[0.25em] text-champagne-400 block mb-1">Espace Hôte</span>
+                    <h2 class="font-serif text-2xl text-champagne-100">Composer la Carte du Soir</h2>
+                </div>
+
+                <form id="form-create-dinner" onsubmit="handleCreateDinner(event)" class="space-y-4 text-xs">
+                    <div>
+                        <label class="block text-stone-400 uppercase tracking-wider text-[10px] mb-1">Nom de l'Hôte *</label>
+                        <input type="text" id="dinner-host-input" required placeholder="Ex: Alexandre" class="w-full bg-onyx-900 border border-stone-800 rounded-none px-3 py-2.5 text-champagne-100 focus:outline-none focus:border-champagne-400 transition">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-stone-400 uppercase tracking-wider text-[10px] mb-1">Date *</label>
+                            <input type="date" id="dinner-date-input" required class="w-full bg-onyx-900 border border-stone-800 rounded-none px-3 py-2.5 text-champagne-100 focus:outline-none focus:border-champagne-400 transition">
+                        </div>
+                        <div>
+                            <label class="block text-stone-400 uppercase tracking-wider text-[10px] mb-1">Thème / Intitulé</label>
+                            <input type="text" id="dinner-theme-input" placeholder="Ex: Nuit Étoilée" class="w-full bg-onyx-900 border border-stone-800 rounded-none px-3 py-2.5 text-champagne-100 focus:outline-none focus:border-champagne-400 transition">
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <span class="block text-[10px] uppercase tracking-widest text-champagne-400 border-b border-stone-800 pb-1 mb-3">Détail du Menu (laisser vide si omis)</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-stone-400 text-[10px] mb-1">Apéritif & Mise en bouche</label>
+                        <input type="text" id="menu-apero" placeholder="Ex: Champagne & Gougères au comté" class="w-full bg-onyx-900 border border-stone-800 rounded-none px-3 py-2 text-champagne-100 focus:outline-none focus:border-champagne-400 transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-stone-400 text-[10px] mb-1">Entrée</label>
+                        <input type="text" id="menu-entree" placeholder="Ex: Velouté de châtaignes à la truffe" class="w-full bg-onyx-900 border border-stone-800 rounded-none px-3 py-2 text-champagne-100 focus:outline-none focus:border-champagne-400 transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-stone-400 text-[10px] mb-1">Plat Principal</label>
+                        <input type="text" id="menu-plat" placeholder="Ex: Risotto de Saint-Jacques" class="w-full bg-onyx-900 border border-stone-800 rounded-none px-3 py-2 text-champagne-100 focus:outline-none focus:border-champagne-400 transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-stone-400 text-[10px] mb-1">Dessert</label>
+                        <input type="text" id="menu-dessert" placeholder="Ex: Soufflé chaud au chocolat noir" class="w-full bg-onyx-900 border border-stone-800 rounded-none px-3 py-2 text-champagne-100 focus:outline-none focus:border-champagne-400 transition">
+                    </div>
+
+                    <button type="submit" class="w-full mt-4 py-3 bg-champagne-400 text-onyx-900 font-medium text-xs uppercase tracking-widest hover:opacity-90 transition">
+                        Publier le Menu
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- SECTION 3: BULLETIN DE VOTE -->
+        <section id="sec-vote" class="hidden space-y-5">
+            <div class="menu-card rounded-sm p-6">
+                <div class="text-center border-b border-champagne-400/20 pb-4 mb-5">
+                    <span class="text-[9px] uppercase tracking-[0.25em] text-champagne-400 block mb-1">Appréciation</span>
+                    <h2 class="font-serif text-2xl text-champagne-100">Bulletin de Notation</h2>
+                </div>
+
+                <form id="form-vote" onsubmit="handleVoteSubmit(event)" class="space-y-5 text-xs">
+                    <div class="space-y-3 vote-item-box p-4 rounded-sm">
+                        <div>
+                            <label class="block text-stone-400 uppercase tracking-wider text-[10px] mb-1">Sélectionner la Table *</label>
+                            <select id="vote-dinner-select" required onchange="updateVoteMenuDisplay()" class="w-full vote-item-box border rounded-none px-3 py-2.5 focus:outline-none focus:border-champagne-400 transition">
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-stone-400 uppercase tracking-wider text-[10px] mb-1">Votre Prénom *</label>
+                            <input type="text" id="voter-name" required placeholder="Ex: Charlotte" class="w-full vote-item-box border rounded-none px-3 py-2.5 focus:outline-none focus:border-champagne-400 transition">
+                        </div>
+                    </div>
+
+                    <div id="vote-menu-info" class="hidden vote-item-box p-3 text-[11px] space-y-1 rounded-sm">
+                        <span class="text-[9px] uppercase tracking-widest text-champagne-400 block">Carte rappelée :</span>
+                        <p id="vote-menu-text" class="italic font-serif"></p>
+                    </div>
+
+                    <!-- 1. APÉRITIF -->
+                    <div class="space-y-2 vote-item-box p-3.5 rounded-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="uppercase tracking-wider text-[10px] text-stone-300">1. L'Apéritif</span>
+                            <span id="score-apero-val" class="font-serif text-base font-semibold text-champagne-400 score-badge-pulse">7.0 / 10</span>
+                        </div>
+                        <input type="range" id="score-apero" min="0" max="10" step="0.5" value="7" style="--range-progress: 70%;" oninput="updateScoreValue('apero', this.value)">
+                        <input type="text" id="comment-apero" placeholder="Remarque discrète sur l'apéritif..." class="w-full vote-item-box border px-2.5 py-1.5 text-[11px] focus:outline-none focus:border-champagne-400">
+                    </div>
+
+                    <!-- 2. REPAS -->
+                    <div class="space-y-2 vote-item-box p-3.5 rounded-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="uppercase tracking-wider text-[10px] text-stone-300">2. La Cuisine & Dressage</span>
+                            <span id="score-repas-val" class="font-serif text-base font-semibold text-champagne-400 score-badge-pulse">7.0 / 10</span>
+                        </div>
+                        <input type="range" id="score-repas" min="0" max="10" step="0.5" value="7" style="--range-progress: 70%;" oninput="updateScoreValue('repas', this.value)">
+                        <input type="text" id="comment-repas" placeholder="Remarque sur la cuisine et la présentation..." class="w-full vote-item-box border px-2.5 py-1.5 text-[11px] focus:outline-none focus:border-champagne-400">
+                    </div>
+
+                    <!-- 3. AMBIANCE -->
+                    <div class="space-y-2 vote-item-box p-3.5 rounded-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="uppercase tracking-wider text-[10px] text-stone-300">3. L'Ambiance & Décoration</span>
+                            <span id="score-ambiance-val" class="font-serif text-base font-semibold text-champagne-400 score-badge-pulse">7.0 / 10</span>
+                        </div>
+                        <input type="range" id="score-ambiance" min="0" max="10" step="0.5" value="7" style="--range-progress: 70%;" oninput="updateScoreValue('ambiance', this.value)">
+                        <input type="text" id="comment-ambiance" placeholder="Remarque sur l'atmosphère du soir..." class="w-full vote-item-box border px-2.5 py-1.5 text-[11px] focus:outline-none focus:border-champagne-400">
+                    </div>
+
+                    <!-- 4. ACTIVITÉ -->
+                    <div class="space-y-2 vote-item-box p-3.5 rounded-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="uppercase tracking-wider text-[10px] text-stone-300">4. L'Animation & Activité</span>
+                            <span id="score-activite-val" class="font-serif text-base font-semibold text-champagne-400 score-badge-pulse">7.0 / 10</span>
+                        </div>
+                        <input type="range" id="score-activite" min="0" max="10" step="0.5" value="7" style="--range-progress: 70%;" oninput="updateScoreValue('activite', this.value)">
+                        <input type="text" id="comment-activite" placeholder="Remarque sur l'animation..." class="w-full vote-item-box border px-2.5 py-1.5 text-[11px] focus:outline-none focus:border-champagne-400">
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 bg-champagne-400 text-onyx-900 font-medium text-xs uppercase tracking-widest hover:opacity-90 transition">
+                        Transmettre le Bulletin
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- SECTION 4: CHEFS -->
+        <section id="sec-chefs" class="hidden space-y-5">
+            <div class="menu-card rounded-sm p-6">
+                <div class="text-center border-b border-champagne-400/20 pb-4 mb-5">
+                    <span class="text-[9px] uppercase tracking-[0.25em] text-champagne-400 block mb-1">Cuisiniers & Hôtes</span>
+                    <h2 class="font-serif text-2xl text-champagne-100 italic">La Brigade des Chefs</h2>
+                </div>
+
+                <div id="chefs-list" class="space-y-4 text-left"></div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: CLASSEMENT & PALMARÈS -->
+        <section id="sec-leaderboard" class="hidden space-y-6">
+            <div class="space-y-3">
+                <h3 class="font-serif text-lg text-champagne-100 italic border-b border-stone-800 pb-2">Distinctions de la Saison</h3>
+                <div class="grid grid-cols-2 gap-3" id="kpi-grid"></div>
+            </div>
+
+            <div class="menu-card rounded-sm p-6 text-center">
+                <div class="border-b border-champagne-400/20 pb-4 mb-5">
+                    <span class="text-[9px] uppercase tracking-[0.25em] text-champagne-400 block mb-1">Bilan Général</span>
+                    <h2 class="font-serif text-2xl text-champagne-100 italic">Palmarès des Tables</h2>
+                </div>
+
+                <div id="leaderboard-list" class="space-y-3 text-left"></div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: ADMINISTRATION -->
+        <section id="sec-admin" class="hidden space-y-5">
+            <div class="menu-card rounded-sm p-6">
+                <div class="text-center border-b border-rose-500/30 pb-4 mb-5">
+                    <span class="text-[9px] uppercase tracking-[0.25em] text-rose-400 block mb-1">Gestion & Maintenance</span>
+                    <h2 class="font-serif text-2xl text-champagne-100">Panneau d'Administration</h2>
+                </div>
+
+                <div class="space-y-6 text-xs">
+                    <div class="space-y-3 vote-item-box p-4 rounded-sm">
+                        <span class="text-[10px] uppercase tracking-widest text-rose-400 block font-semibold"><i class="fa-solid fa-trash-can mr-1"></i> Supprimer une Soirée</span>
+                        <div id="admin-dinners-list" class="space-y-2"></div>
+                    </div>
+
+                    <div class="space-y-3 vote-item-box p-4 rounded-sm">
+                        <span class="text-[10px] uppercase tracking-widest text-rose-400 block font-semibold"><i class="fa-solid fa-user-xmark mr-1"></i> Purger un Chef & ses soirées</span>
+                        <div id="admin-chefs-list" class="space-y-2"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal PIN Admin -->
+    <div id="admin-pin-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-onyx-800 border border-champagne-400/30 w-full max-w-xs rounded-sm p-6 space-y-4 text-center">
+            <span class="text-[9px] uppercase tracking-[0.2em] text-champagne-400 block">Sécurité Admin</span>
+            <h3 class="font-serif text-xl text-champagne-100">Saisir le Code PIN</h3>
+            <p class="text-[10px] text-stone-400">Code par défaut : <strong>1234</strong></p>
+
+            <input type="password" id="admin-pin-input" placeholder="****" maxlength="8" class="w-full text-center vote-item-box border px-3 py-2 tracking-widest text-lg focus:outline-none focus:border-champagne-400">
+
+            <div class="flex space-x-2 pt-2">
+                <button onclick="closeAdminPinModal()" class="flex-1 py-2 bg-stone-800 text-stone-400 text-xs uppercase tracking-wider hover:text-stone-200">Annuler</button>
+                <button onclick="verifyAdminPin()" class="flex-1 py-2 bg-champagne-400 text-onyx-900 font-medium text-xs uppercase tracking-wider hover:opacity-90">Valider</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EFFET PARCHEMIN AVEC NAVIGATION SWIPE / FLÈCHES -->
+    <div id="dinner-details-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div id="parchment-container" class="parchment-modal w-full max-w-md max-h-[85vh] overflow-y-auto p-6 space-y-6">
+            
+            <!-- Bouton Fermer -->
+            <button onclick="closeModal()" class="absolute top-5 right-5 text-stone-400 hover:text-champagne-300 text-base p-2 z-10"><i class="fa-solid fa-xmark"></i></button>
+
+            <!-- Flèches de Navigation latérale -->
+            <button onclick="navigateDinner(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 text-champagne-400 hover:text-champagne-200 text-xl p-2 z-10 bg-black/20 rounded-full w-9 h-9 flex items-center justify-center" title="Menu précédent">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button onclick="navigateDinner(1)" class="absolute right-2 top-1/2 -translate-y-1/2 text-champagne-400 hover:text-champagne-200 text-xl p-2 z-10 bg-black/20 rounded-full w-9 h-9 flex items-center justify-center" title="Menu suivant">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+            <!-- En-tête style Parchemin Ancien -->
+            <div class="text-center space-y-2 pt-2 border-b border-champagne-400/20 pb-5 px-6">
+                <div class="flex justify-center items-center space-x-1.5 text-champagne-400 text-xs">
+                    <i class="fa-solid fa-star text-[10px]"></i>
+                    <i class="fa-solid fa-star text-xs"></i>
+                    <i class="fa-solid fa-star text-[10px]"></i>
+                </div>
+                <span id="modal-counter-index" class="text-[9px] uppercase tracking-[0.3em] text-stone-400 block">Menu de la Table</span>
+                <h3 id="modal-host-name" class="font-serif text-3xl text-champagne-100 italic">Chez Alexandre</h3>
+                <p id="modal-date" class="text-[11px] text-champagne-400 tracking-wider uppercase">27.10.2026</p>
+                <p id="modal-theme" class="text-[11px] text-stone-300 italic pt-1">— Nuit Étoilée —</p>
+            </div>
+
+            <!-- Note Globale -->
+            <div class="bg-black/10 border border-champagne-400/20 p-4 text-center rounded-sm">
+                <span class="text-[9px] uppercase tracking-[0.2em] text-stone-400 block mb-1">Appréciation Globale de la Table</span>
+                <span id="modal-avg-score" class="font-serif text-4xl text-champagne-400 font-normal">0.0</span>
+                <span class="text-xs text-stone-400 font-serif"> / 10</span>
+            </div>
+
+            <!-- Intitulé des Plats façon Manuscrit / Parchemin -->
+            <div class="space-y-4 bg-black/10 p-5 border border-champagne-400/10 rounded-sm text-center">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[9px] uppercase tracking-widest text-champagne-400">La Carte</span>
+                    <button id="modal-edit-btn" onclick="openEditDinnerModal()" class="hidden text-amber-500 hover:text-amber-400 text-[10px] uppercase tracking-wider font-medium"><i class="fa-solid fa-pen-to-square mr-1"></i> Modifier</button>
+                </div>
+
+                <div id="modal-menu-container" class="space-y-3 font-serif text-sm">
+                    <!-- Rempli dynamiquement pour ne garder que les plats renseignés -->
+                </div>
+            </div>
+
+            <!-- Bulletins et Avis des Convives -->
+            <div class="space-y-3 pt-2">
+                <div class="flex justify-between items-center border-b border-stone-800 pb-2">
+                    <span class="text-[9px] uppercase tracking-widest text-champagne-400 font-medium">Avis des Convives</span>
+                    <span class="text-[10px] text-stone-400 uppercase tracking-wider"><span id="modal-votes-count">0</span> bulletin(s)</span>
+                </div>
+                <div id="modal-votes-list" class="space-y-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Rectification / Édition de Dîner -->
+    <div id="edit-dinner-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-onyx-800 border border-amber-400/40 w-full max-w-md rounded-sm max-h-[85vh] overflow-y-auto p-6 space-y-4">
+            <div class="flex justify-between items-center border-b border-stone-800 pb-3">
+                <h3 class="font-serif text-xl text-champagne-100">Rectifier la Soirée</h3>
+                <button onclick="closeEditModal()" class="text-stone-400 hover:text-stone-200"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="form-edit-dinner" onsubmit="handleSaveEditDinner(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="edit-dinner-id">
+                <div>
+                    <label class="block text-stone-400 text-[10px] uppercase mb-1">Nom de l'Hôte</label>
+                    <input type="text" id="edit-host" required class="w-full bg-onyx-900 border border-stone-800 px-3 py-2 text-champagne-100">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-stone-400 text-[10px] uppercase mb-1">Date</label>
+                        <input type="date" id="edit-date" required class="w-full bg-onyx-900 border border-stone-800 px-3 py-2 text-champagne-100">
+                    </div>
+                    <div>
+                        <label class="block text-stone-400 text-[10px] uppercase mb-1">Thème</label>
+                        <input type="text" id="edit-theme" class="w-full bg-onyx-900 border border-stone-800 px-3 py-2 text-champagne-100">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-stone-400 text-[10px] uppercase mb-1">Apéritif</label>
+                    <input type="text" id="edit-apero" class="w-full bg-onyx-900 border border-stone-800 px-3 py-2 text-champagne-100">
+                </div>
+                <div>
+                    <label class="block text-stone-400 text-[10px] uppercase mb-1">Entrée</label>
+                    <input type="text" id="edit-entree" class="w-full bg-onyx-900 border border-stone-800 px-3 py-2 text-champagne-100">
+                </div>
+                <div>
+                    <label class="block text-stone-400 text-[10px] uppercase mb-1">Plat Principal</label>
+                    <input type="text" id="edit-plat" class="w-full bg-onyx-900 border border-stone-800 px-3 py-2 text-champagne-100">
+                </div>
+                <div>
+                    <label class="block text-stone-400 text-[10px] uppercase mb-1">Dessert</label>
+                    <input type="text" id="edit-dessert" class="w-full bg-onyx-900 border border-stone-800 px-3 py-2 text-champagne-100">
+                </div>
+
+                <div class="flex space-x-2 pt-3">
+                    <button type="button" onclick="closeEditModal()" class="flex-1 py-2 bg-stone-800 text-stone-400 text-xs uppercase">Annuler</button>
+                    <button type="submit" class="flex-1 py-2 bg-champagne-400 text-onyx-900 font-medium text-xs uppercase">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-onyx-800 border border-champagne-400/40 text-champagne-100 text-xs tracking-wider uppercase px-4 py-2.5 rounded-none shadow-2xl transition-all duration-300 opacity-0 pointer-events-none">
+        <span id="toast-msg">Notification</span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 backdrop-blur-md border-t border-stone-800/80 px-4 py-3">
+        <div class="max-w-md mx-auto flex justify-around items-center text-stone-400 text-[10px] uppercase tracking-widest" id="nav-items-container">
+            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center space-y-1 nav-item-active transition">
+                <i class="fa-solid fa-house text-xs"></i>
+                <span>Accueil</span>
+            </button>
+
+            <button onclick="switchTab('create')" id="nav-create" class="flex flex-col items-center space-y-1 transition">
+                <i class="fa-solid fa-pen-nib text-xs"></i>
+                <span>Menu</span>
+            </button>
+
+            <button onclick="switchTab('vote')" id="nav-vote" class="flex flex-col items-center space-y-1 transition">
+                <i class="fa-solid fa-check text-xs"></i>
+                <span>Voter</span>
+            </button>
+
+            <button onclick="switchTab('chefs')" id="nav-chefs" class="flex flex-col items-center space-y-1 transition">
+                <i class="fa-solid fa-hat-wizard text-xs"></i>
+                <span>Chefs</span>
+            </button>
+
+            <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="flex flex-col items-center space-y-1 transition">
+                <i class="fa-solid fa-trophy text-xs"></i>
+                <span>Palmarès</span>
+            </button>
+
+            <button onclick="switchTab('admin')" id="nav-admin" class="hidden flex flex-col items-center space-y-1 text-rose-400 transition">
+                <i class="fa-solid fa-user-shield text-xs"></i>
+                <span>Admin</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- FIREBASE SDKs & Application Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDC7p0P6h6G85x9rUKyBMrEyR16vs8aVU4",
+            authDomain: "topchef-76467.firebaseapp.com",
+            projectId: "topchef-76467",
+            storageBucket: "topchef-76467.firebasestorage.app",
+            messagingSenderId: "177440225934",
+            appId: "1:177440225934:web:9ac2285e7657d1672e67df",
+            measurementId: "G-409KNYFWLV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let appData = { dinners: [] };
+        let activeTab = 'home';
+        let isAdmin = false;
+        let selectedDinnerIndex = 0;
+        let selectedDinnerForModal = null;
+        const ADMIN_PIN = "1234";
+
+        window.toggleTheme = function() {
+            const body = document.getElementById('body-app');
+            const toggleBtn = document.getElementById('theme-toggle-btn');
+            if (body.classList.contains('theme-dark')) {
+                body.classList.remove('theme-dark');
+                body.classList.add('theme-light');
+                toggleBtn.innerText = '☀️';
+                localStorage.setItem('theme_pref', 'light');
+            } else {
+                body.classList.remove('theme-light');
+                body.classList.add('theme-dark');
+                toggleBtn.innerText = '🌙';
+                localStorage.setItem('theme_pref', 'dark');
+            }
+        };
+
+        if (localStorage.getItem('theme_pref') === 'light') {
+            document.getElementById('body-app').classList.remove('theme-dark');
+            document.getElementById('body-app').classList.add('theme-light');
+            document.getElementById('theme-toggle-btn').innerText = '☀️';
+        }
+
+        onSnapshot(collection(db, "dinners"), (snapshot) => {
+            const dinners = [];
+            snapshot.forEach((docSnap) => {
+                dinners.push({ id: docSnap.id, ...docSnap.data() });
+            });
+            
+            dinners.sort((a, b) => new Date(a.date) - new Date(b.date));
+            appData.dinners = dinners;
+            
+            updateStatusBadge(true);
+            renderCurrentView();
+        }, (error) => {
+            console.error("Erreur Firebase Firestore :", error);
+            updateStatusBadge(false);
+        });
+
+        function updateStatusBadge(isOnline) {
+            const el = document.getElementById('sync-status');
+            if (el) {
+                if (isOnline) {
+                    el.innerText = "En Direct";
+                    el.className = "text-[9px] uppercase tracking-wider text-emerald-400 border border-emerald-500/30 px-2 py-0.5";
+                } else {
+                    el.innerText = "Hors-Ligne";
+                    el.className = "text-[9px] uppercase tracking-wider text-rose-400 border border-rose-500/30 px-2 py-0.5";
+                }
+            }
+        }
+
+        function getMyCreatedDinnerIds() {
+            try {
+                return JSON.parse(localStorage.getItem('my_created_dinners') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveMyCreatedDinnerId(id) {
+            const ids = getMyCreatedDinnerIds();
+            if (!ids.includes(id)) {
+                ids.push(id);
+                localStorage.setItem('my_created_dinners', JSON.stringify(ids));
+            }
+        }
+
+        window.openEditDinnerModalFromHome = function() {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const sortedDinners = [...appData.dinners].sort((a, b) => new Date(a.date) - new Date(b.date));
+            const upcomingDinners = sortedDinners.filter(d => d.date >= todayStr);
+            const activeDinner = upcomingDinners.length > 0 ? upcomingDinners[0] : sortedDinners[sortedDinners.length - 1];
+
+            if (activeDinner) {
+                selectedDinnerForModal = activeDinner;
+                openEditDinnerModal();
+            }
+        };
+
+        window.toggleAdminAuth = function() {
+            if (isAdmin) {
+                isAdmin = false;
+                document.getElementById('admin-lock-icon').className = "fa-solid fa-lock";
+                document.getElementById('nav-admin').classList.add('hidden');
+                document.getElementById('modal-edit-btn').classList.add('hidden');
+                showToast("Mode Administrateur désactivé");
+                if (activeTab === 'admin') switchTab('home');
+            } else {
+                document.getElementById('admin-pin-modal').classList.remove('hidden');
+            }
+        };
+
+        window.closeAdminPinModal = function() {
+            document.getElementById('admin-pin-modal').classList.add('hidden');
+            document.getElementById('admin-pin-input').value = '';
+        };
+
+        window.verifyAdminPin = function() {
+            const pin = document.getElementById('admin-pin-input').value;
+            if (pin === ADMIN_PIN) {
+                isAdmin = true;
+                document.getElementById('admin-lock-icon').className = "fa-solid fa-lock-open text-amber-400";
+                document.getElementById('nav-admin').classList.remove('hidden');
+                document.getElementById('modal-edit-btn').classList.remove('hidden');
+                closeAdminPinModal();
+                showToast("Mode Administrateur activé");
+                switchTab('admin');
+            } else {
+                showToast("Code PIN incorrect");
+                document.getElementById('admin-pin-input').value = '';
+            }
+        };
+
+        window.openEditDinnerModal = function() {
+            if (!selectedDinnerForModal) return;
+            document.getElementById('edit-dinner-id').value = selectedDinnerForModal.id;
+            document.getElementById('edit-host').value = selectedDinnerForModal.host || '';
+            document.getElementById('edit-date').value = selectedDinnerForModal.date || '';
+            document.getElementById('edit-theme').value = selectedDinnerForModal.theme || '';
+            document.getElementById('edit-apero').value = selectedDinnerForModal.menu?.apero || '';
+            document.getElementById('edit-entree').value = selectedDinnerForModal.menu?.entree || '';
+            document.getElementById('edit-plat').value = selectedDinnerForModal.menu?.plat || '';
+            document.getElementById('edit-dessert').value = selectedDinnerForModal.menu?.dessert || '';
+
+            document.getElementById('edit-dinner-modal').classList.remove('hidden');
+        };
+
+        window.closeEditModal = function() {
+            document.getElementById('edit-dinner-modal').classList.add('hidden');
+        };
+
+        window.handleSaveEditDinner = async function(event) {
+            event.preventDefault();
+            const id = document.getElementById('edit-dinner-id').value;
+
+            const updatedData = {
+                host: document.getElementById('edit-host').value.trim(),
+                date: document.getElementById('edit-date').value,
+                theme: document.getElementById('edit-theme').value.trim(),
+                menu: {
+                    apero: document.getElementById('edit-apero').value.trim(),
+                    entree: document.getElementById('edit-entree').value.trim(),
+                    plat: document.getElementById('edit-plat').value.trim(),
+                    dessert: document.getElementById('edit-dessert').value.trim()
+                }
+            };
+
+            try {
+                await updateDoc(doc(db, "dinners", id), updatedData);
+                showToast("Dîner rectifié avec succès !");
+                closeEditModal();
+                closeModal();
+            } catch (err) {
+                console.error("Erreur mise à jour :", err);
+                showToast("Erreur lors de la rectification.");
+            }
+        };
+
+        window.deleteDinner = async function(dinnerId) {
+            if (!isAdmin) return;
+            if (!confirm("Voulez-vous vraiment supprimer définitivement cette soirée ?")) return;
+
+            try {
+                await deleteDoc(doc(db, "dinners", dinnerId));
+                showToast("Soirée supprimée !");
+            } catch (err) {
+                console.error("Erreur suppression :", err);
+                showToast("Erreur lors de la suppression.");
+            }
+        };
+
+        window.deleteVote = async function(dinnerId, voteIndex) {
+            if (!isAdmin) return;
+            if (!confirm("Supprimer ce bulletin de vote ?")) return;
+
+            const dinner = appData.dinners.find(d => d.id === dinnerId);
+            if (!dinner || !dinner.votes) return;
+
+            const updatedVotes = dinner.votes.filter((_, idx) => idx !== voteIndex);
+
+            try {
+                await updateDoc(doc(db, "dinners", dinnerId), { votes: updatedVotes });
+                showToast("Note supprimée !");
+                openDinnerDetailsById(dinnerId);
+            } catch (err) {
+                console.error("Erreur suppression vote :", err);
+                showToast("Erreur lors de la suppression du vote.");
+            }
+        };
+
+        window.deleteChef = async function(hostName) {
+            if (!isAdmin) return;
+            if (!confirm(`Supprimer l'intégralité des soirées organisées par ${hostName} ?`)) return;
+
+            const hostDinners = appData.dinners.filter(d => d.host.toLowerCase() === hostName.toLowerCase());
+
+            try {
+                for (let dinner of hostDinners) {
+                    await deleteDoc(doc(db, "dinners", dinner.id));
+                }
+                showToast(`Chef ${hostName} et ses dîners supprimés.`);
+            } catch (err) {
+                console.error("Erreur suppression chef :", err);
+                showToast("Erreur lors de la suppression.");
+            }
+        };
+
+        window.switchTab = function(tabId) {
+            activeTab = tabId;
+            const tabs = ['home', 'create', 'vote', 'chefs', 'leaderboard', 'admin'];
+            tabs.forEach(t => {
+                const sec = document.getElementById(`sec-${t}`);
+                if (sec) sec.classList.add('hidden');
+                const navBtn = document.getElementById(`nav-${t}`);
+                if (navBtn) navBtn.classList.remove('nav-item-active');
+            });
+
+            const currentSec = document.getElementById(`sec-${tabId}`);
+            if (currentSec) {
+                currentSec.classList.remove('hidden');
+                currentSec.classList.remove('animate-fade-in');
+                void currentSec.offsetWidth;
+                currentSec.classList.add('animate-fade-in');
+            }
+
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) activeNav.classList.add('nav-item-active');
+
+            renderCurrentView();
+        };
+
+        function renderCurrentView() {
+            if (activeTab === 'home') renderHome();
+            if (activeTab === 'vote') populateVoteDinnerSelect();
+            if (activeTab === 'chefs') renderChefs();
+            if (activeTab === 'leaderboard') renderLeaderboard();
+            if (activeTab === 'admin') renderAdmin();
+        }
+
+        window.updateScoreValue = function(category, val) {
+            const el = document.getElementById(`score-${category}-val`);
+            const inputEl = document.getElementById(`score-${category}`);
+            
+            if (inputEl) {
+                const pct = (parseFloat(val) / 10) * 100;
+                inputEl.style.setProperty('--range-progress', `${pct}%`);
+            }
+
+            if (el) {
+                el.innerText = parseFloat(val).toFixed(1) + ' / 10';
+                el.style.transform = 'scale(1.15)';
+                setTimeout(() => { el.style.transform = 'scale(1)'; }, 150);
+            }
+        };
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                document.getElementById('toast-msg').innerText = message;
+                toast.classList.remove('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'pointer-events-none');
+                }, 3000);
+            }
+        }
+
+        function calculateVoteAvg(vote) {
+            return (parseFloat(vote.apero) + parseFloat(vote.repas) + parseFloat(vote.ambiance) + parseFloat(vote.activite)) / 4;
+        }
+
+        function calculateDinnerAvg(dinner) {
+            if (!dinner.votes || dinner.votes.length === 0) return 0;
+            const total = dinner.votes.reduce((acc, v) => acc + calculateVoteAvg(v), 0);
+            return total / dinner.votes.length;
+        }
+
+        function renderHome() {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const sortedDinners = [...appData.dinners].sort((a, b) => new Date(a.date) - new Date(b.date));
+            const upcomingDinners = sortedDinners.filter(d => d.date >= todayStr);
+            const pastDinners = sortedDinners.filter(d => d.date < todayStr).reverse();
+
+            const activeDinner = upcomingDinners.length > 0 ? upcomingDinners[0] : sortedDinners[sortedDinners.length - 1];
+
+            const myCreatedIds = getMyCreatedDinnerIds();
+            const homeEditBtn = document.getElementById('home-edit-btn');
+
+            if (activeDinner) {
+                document.getElementById('home-host-name').innerText = `Chez ${activeDinner.host}`;
+                document.getElementById('home-date').innerText = activeDinner.date;
+                
+                const menuContainer = document.getElementById('home-menu-container');
+                let menuHtml = `<span id="home-theme" class="text-[10px] uppercase tracking-widest text-stone-400 italic block mb-3">${activeDinner.theme ? `— ${activeDinner.theme} —` : '— Thème Libre —'}</span>`;
+
+                const courses = [
+                    { key: 'apero', label: "L'Apéritif" },
+                    { key: 'entree', label: "L'Entrée" },
+                    { key: 'plat', label: "Le Plat Principal" },
+                    { key: 'dessert', label: "Le Dessert" }
+                ];
+
+                courses.forEach(course => {
+                    const val = activeDinner.menu?.[course.key];
+                    if (val && val.trim() !== '') {
+                        menuHtml += `
+                            <div class="space-y-1">
+                                <span class="text-[9px] uppercase tracking-widest text-champagne-400 block">${course.label}</span>
+                                <p class="text-stone-300 italic font-serif text-sm">${val}</p>
+                            </div>
+                        `;
+                    }
+                });
+                menuContainer.innerHTML = menuHtml;
+
+                if (isAdmin || myCreatedIds.includes(activeDinner.id)) {
+                    homeEditBtn.classList.remove('hidden');
+                } else {
+                    homeEditBtn.classList.add('hidden');
+                }
+            } else {
+                homeEditBtn.classList.add('hidden');
+            }
+
+            const upcomingContainer = document.getElementById('dinners-upcoming-list');
+            if (upcomingContainer) {
+                upcomingContainer.innerHTML = '';
+                const nextDinners = upcomingDinners.filter(d => d.id !== activeDinner?.id);
+
+                if (nextDinners.length === 0) {
+                    upcomingContainer.innerHTML = `<p class="text-xs text-stone-500 italic text-center py-2">Aucun autre dîner prévu pour le moment.</p>`;
+                } else {
+                    nextDinners.forEach(dinner => {
+                        const card = document.createElement('div');
+                        card.className = "history-card bg-onyx-800 border border-stone-800 p-4 flex justify-between items-center cursor-pointer transition";
+                        card.onclick = () => openDinnerDetailsById(dinner.id);
+                        card.innerHTML = `
+                            <div class="space-y-0.5">
+                                <span class="font-serif text-base text-champagne-100">${dinner.host}</span>
+                                <p class="text-[10px] text-stone-400 uppercase tracking-wider">${dinner.date} • ${dinner.theme || 'Thème libre'}</p>
+                            </div>
+                            <span class="text-[10px] uppercase tracking-wider text-amber-500 border border-amber-500/30 px-2 py-1">À venir</span>
+                        `;
+                        upcomingContainer.appendChild(card);
+                    });
+                }
+            }
+
+            const historyContainer = document.getElementById('dinners-history-list');
+            if (historyContainer) {
+                historyContainer.innerHTML = '';
+                if (pastDinners.length === 0) {
+                    historyContainer.innerHTML = `<p class="text-xs text-stone-500 italic text-center py-2">Aucune soirée passée enregistrée.</p>`;
+                } else {
+                    pastDinners.forEach(dinner => {
+                        const avg = calculateDinnerAvg(dinner).toFixed(1);
+                        const voteCount = dinner.votes ? dinner.votes.length : 0;
+
+                        const card = document.createElement('div');
+                        card.className = "history-card bg-onyx-800 border border-stone-800 p-4 flex justify-between items-center cursor-pointer transition";
+                        card.onclick = () => openDinnerDetailsById(dinner.id);
+
+                        card.innerHTML = `
+                            <div class="space-y-0.5">
+                                <span class="font-serif text-base text-champagne-100">${dinner.host}</span>
+                                <p class="text-[10px] text-stone-400 uppercase tracking-wider">${dinner.date} • ${voteCount} avis</p>
+                            </div>
+                            <span class="font-serif text-xl text-champagne-400">${avg} <span class="text-[10px] font-sans text-stone-500">/10</span></span>
+                        `;
+                        historyContainer.appendChild(card);
+                    });
+                }
+            }
+        }
+
+        function renderKPIs() {
+            const kpiContainer = document.getElementById('kpi-grid');
+            if (!kpiContainer) return;
+            kpiContainer.innerHTML = '';
+
+            if (appData.dinners.length === 0) return;
+
+            let bestApero = null, bestRepas = null, bestAmbiance = null, bestActivite = null;
+            let maxApero = -1, maxRepas = -1, maxAmbiance = -1, maxActivite = -1;
+
+            appData.dinners.forEach(d => {
+                if (!d.votes || d.votes.length === 0) return;
+                const aperoAvg = d.votes.reduce((acc, v) => acc + parseFloat(v.apero), 0) / d.votes.length;
+                const repasAvg = d.votes.reduce((acc, v) => acc + parseFloat(v.repas), 0) / d.votes.length;
+                const ambianceAvg = d.votes.reduce((acc, v) => acc + parseFloat(v.ambiance), 0) / d.votes.length;
+                const activiteAvg = d.votes.reduce((acc, v) => acc + parseFloat(v.activite), 0) / d.votes.length;
+
+                if (aperoAvg > maxApero) { maxApero = aperoAvg; bestApero = d.host; }
+                if (repasAvg > maxRepas) { maxRepas = repasAvg; bestRepas = d.host; }
+                if (ambianceAvg > maxAmbiance) { maxAmbiance = ambianceAvg; bestAmbiance = d.host; }
+                if (activiteAvg > maxActivite) { maxActivite = activiteAvg; bestActivite = d.host; }
+            });
+
+            const kpis = [
+                { title: "As de l'Apéro", winner: bestApero || "—", score: maxApero >= 0 ? maxApero.toFixed(1) + " /10" : "-" },
+                { title: "Cordon Bleu", winner: bestRepas || "—", score: maxRepas >= 0 ? maxRepas.toFixed(1) + " /10" : "-" },
+                { title: "Roi de la Fête", winner: bestAmbiance || "—", score: maxAmbiance >= 0 ? maxAmbiance.toFixed(1) + " /10" : "-" },
+                { title: "Animateur Star", winner: bestActivite || "—", score: maxActivite >= 0 ? maxActivite.toFixed(1) + " /10" : "-" }
+            ];
+
+            kpis.forEach(kpi => {
+                const box = document.createElement('div');
+                box.className = "bg-onyx-800 border border-stone-800 p-3 flex flex-col justify-between";
+                box.innerHTML = `
+                    <span class="text-[9px] uppercase tracking-widest text-champagne-400 block mb-1">${kpi.title}</span>
+                    <span class="font-serif text-sm text-champagne-100 font-medium">${kpi.winner}</span>
+                    <span class="text-[10px] text-stone-400 mt-1">${kpi.score}</span>
+                `;
+                kpiContainer.appendChild(box);
+            });
+        }
+
+        window.handleCreateDinner = async function(event) {
+            event.preventDefault();
+            const host = document.getElementById('dinner-host-input').value.trim();
+            const date = document.getElementById('dinner-date-input').value;
+            const theme = document.getElementById('dinner-theme-input').value.trim();
+            const apero = document.getElementById('menu-apero').value.trim();
+            const entree = document.getElementById('menu-entree').value.trim();
+            const plat = document.getElementById('menu-plat').value.trim();
+            const dessert = document.getElementById('menu-dessert').value.trim();
+
+            if (!host || !date) {
+                showToast("Veuillez remplir l'hôte et la date.");
+                return;
+            }
+
+            const newDinner = {
+                host,
+                date,
+                theme,
+                menu: { apero, entree, plat, dessert },
+                votes: []
+            };
+
+            try {
+                const docRef = await addDoc(collection(db, "dinners"), newDinner);
+                saveMyCreatedDinnerId(docRef.id);
+
+                showToast("Menu publié avec succès !");
+                document.getElementById('form-create-dinner').reset();
+                switchTab('home');
+            } catch (err) {
+                console.error("Erreur ajout :", err);
+                showToast("Erreur lors de la publication.");
+            }
+        };
+
+        function populateVoteDinnerSelect() {
+            const select = document.getElementById('vote-dinner-select');
+            if (!select) return;
+            select.innerHTML = '<option value="">-- Choisir une table --</option>';
+
+            appData.dinners.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d.id;
+                opt.innerText = `Chez ${d.host} (${d.date})`;
+                select.appendChild(opt);
+            });
+            updateVoteMenuDisplay();
+        }
+
+        window.updateVoteMenuDisplay = function() {
+            const selectId = document.getElementById('vote-dinner-select').value;
+            const infoBox = document.getElementById('vote-menu-info');
+            const textEl = document.getElementById('vote-menu-text');
+
+            if (!selectId) {
+                infoBox.classList.add('hidden');
+                return;
+            }
+
+            const dinner = appData.dinners.find(d => d.id === selectId);
+            if (dinner && dinner.menu) {
+                let parts = [];
+                if (dinner.menu.apero) parts.push(`Apéro: ${dinner.menu.apero}`);
+                if (dinner.menu.entree) parts.push(`Entrée: ${dinner.menu.entree}`);
+                if (dinner.menu.plat) parts.push(`Plat: ${dinner.menu.plat}`);
+                if (dinner.menu.dessert) parts.push(`Dessert: ${dinner.menu.dessert}`);
+
+                textEl.innerText = parts.length > 0 ? parts.join(' | ') : "Aucun plat renseigné";
+                infoBox.classList.remove('hidden');
+            } else {
+                infoBox.classList.add('hidden');
+            }
+        };
+
+        window.handleVoteSubmit = async function(event) {
+            event.preventDefault();
+            const dinnerId = document.getElementById('vote-dinner-select').value;
+            const voterName = document.getElementById('voter-name').value.trim();
+
+            if (!dinnerId || !voterName) {
+                showToast("Veuillez remplir tous les champs obligatoires.");
+                return;
+            }
+
+            const vote = {
+                voter: voterName,
+                apero: parseFloat(document.getElementById('score-apero').value),
+                repas: parseFloat(document.getElementById('score-repas').value),
+                ambiance: parseFloat(document.getElementById('score-ambiance').value),
+                activite: parseFloat(document.getElementById('score-activite').value),
+                comments: {
+                    apero: document.getElementById('comment-apero').value.trim(),
+                    repas: document.getElementById('comment-repas').value.trim(),
+                    ambiance: document.getElementById('comment-ambiance').value.trim(),
+                    activite: document.getElementById('comment-activite').value.trim()
+                }
+            };
+
+            const dinner = appData.dinners.find(d => d.id === dinnerId);
+            if (!dinner) return;
+
+            const updatedVotes = dinner.votes ? [...dinner.votes, vote] : [vote];
+
+            try {
+                await updateDoc(doc(db, "dinners", dinnerId), { votes: updatedVotes });
+                showToast("Bulletin transmis avec succès !");
+                document.getElementById('form-vote').reset();
+                switchTab('home');
+            } catch (err) {
+                console.error("Erreur vote :", err);
+                showToast("Erreur lors de l'enregistrement.");
+            }
+        };
+
+        function renderChefs() {
+            const container = document.getElementById('chefs-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const chefsMap = {};
+            appData.dinners.forEach(d => {
+                if (!chefsMap[d.host]) {
+                    chefsMap[d.host] = { dinnersCount: 0, totalScore: 0, scoredDinners: 0 };
+                }
+                chefsMap[d.host].dinnersCount++;
+                const avg = calculateDinnerAvg(d);
+                if (d.votes && d.votes.length > 0) {
+                    chefsMap[d.host].totalScore += avg;
+                    chefsMap[d.host].scoredDinners++;
+                }
+            });
+
+            const chefsList = Object.keys(chefsMap).map(host => {
+                const data = chefsMap[host];
+                const globalAvg = data.scoredDinners > 0 ? (data.totalScore / data.scoredDinners) : 0;
+                return { host, dinnersCount: data.dinnersCount, globalAvg };
+            });
+
+            chefsList.sort((a, b) => b.globalAvg - a.globalAvg);
+
+            if (chefsList.length === 0) {
+                container.innerHTML = `<p class="text-xs text-stone-500 italic text-center py-4">Aucun chef répertorié.</p>`;
+                return;
+            }
+
+            chefsList.forEach((chef, index) => {
+                const card = document.createElement('div');
+                card.className = "chef-card bg-onyx-800 border border-stone-800 p-4 flex justify-between items-center";
+                card.innerHTML = `
+                    <div class="space-y-0.5">
+                        <span class="text-[9px] uppercase tracking-widest text-champagne-400 block">Chef #${index + 1}</span>
+                        <h4 class="font-serif text-lg text-champagne-100">${chef.host}</h4>
+                        <p class="text-[10px] text-stone-400 uppercase tracking-wider">${chef.dinnersCount} dîner(s) organisé(s)</p>
+                    </div>
+                    <span class="font-serif text-xl text-champagne-400">${chef.globalAvg > 0 ? chef.globalAvg.toFixed(1) : '-'} <span class="text-[10px] font-sans text-stone-500">/10</span></span>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderLeaderboard() {
+            renderKPIs();
+
+            const container = document.getElementById('leaderboard-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const sortedDinners = [...appData.dinners].map(d => ({
+                ...d,
+                avg: calculateDinnerAvg(d)
+            })).sort((a, b) => b.avg - a.avg);
+
+            if (sortedDinners.length === 0) {
+                container.innerHTML = `<p class="text-xs text-stone-500 italic text-center py-4">Aucun classement disponible.</p>`;
+                return;
+            }
+
+            sortedDinners.forEach((dinner, index) => {
+                const card = document.createElement('div');
+                card.className = "history-card bg-onyx-800 border border-stone-800 p-4 flex justify-between items-center cursor-pointer";
+                card.onclick = () => openDinnerDetailsById(dinner.id);
+
+                card.innerHTML = `
+                    <div class="space-y-0.5">
+                        <span class="text-[9px] uppercase tracking-widest text-champagne-400 block">Rang #${index + 1}</span>
+                        <h4 class="font-serif text-base text-champagne-100">Chez ${dinner.host}</h4>
+                        <p class="text-[10px] text-stone-400 uppercase tracking-wider">${dinner.date} • ${dinner.votes ? dinner.votes.length : 0} avis</p>
+                    </div>
+                    <span class="font-serif text-xl text-champagne-400">${dinner.avg.toFixed(1)} <span class="text-[10px] font-sans text-stone-500">/10</span></span>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderAdmin() {
+            const dinnersContainer = document.getElementById('admin-dinners-list');
+            const chefsContainer = document.getElementById('admin-chefs-list');
+
+            if (!dinnersContainer || !chefsContainer) return;
+
+            dinnersContainer.innerHTML = appData.dinners.length === 0 ? 
+                `<p class="text-stone-500 italic">Aucune soirée.</p>` :
+                appData.dinners.map(d => `
+                    <div class="flex justify-between items-center p-2 vote-item-box rounded-sm">
+                        <div>
+                            <span class="font-serif text-champagne-100">${d.host}</span>
+                            <span class="text-[10px] text-stone-400 ml-2">(${d.date})</span>
+                        </div>
+                        <button onclick="deleteDinner('${d.id}')" class="text-rose-400 hover:text-rose-300 p-1">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `).join('');
+
+            const hosts = [...new Set(appData.dinners.map(d => d.host))];
+            chefsContainer.innerHTML = hosts.length === 0 ? 
+                `<p class="text-stone-500 italic">Aucun chef.</p>` :
+                hosts.map(host => `
+                    <div class="flex justify-between items-center p-2 vote-item-box rounded-sm">
+                        <span class="font-serif text-champagne-100">${host}</span>
+                        <button onclick="deleteChef('${host}')" class="text-rose-400 hover:text-rose-300 p-1">
+                            <i class="fa-solid fa-user-xmark"></i>
+                        </button>
+                    </div>
+                `).join('');
+        }
+
+        window.openDinnerDetailsById = function(dinnerId) {
+            const index = appData.dinners.findIndex(d => d.id === dinnerId);
+            if (index !== -1) {
+                selectedDinnerIndex = index;
+                renderDinnerModalContent();
+                document.getElementById('dinner-details-modal').classList.remove('hidden');
+            }
+        };
+
+        window.navigateDinner = function(direction) {
+            if (appData.dinners.length === 0) return;
+            selectedDinnerIndex = (selectedDinnerIndex + direction + appData.dinners.length) % appData.dinners.length;
+            renderDinnerModalContent();
+        };
+
+        function renderDinnerModalContent() {
+            const dinner = appData.dinners[selectedDinnerIndex];
+            if (!dinner) return;
+
+            selectedDinnerForModal = dinner;
+
+            document.getElementById('modal-counter-index').innerText = `Menu ${selectedDinnerIndex + 1} sur ${appData.dinners.length}`;
+            document.getElementById('modal-host-name').innerText = `Chez ${dinner.host}`;
+            document.getElementById('modal-date').innerText = dinner.date;
+            document.getElementById('modal-theme').innerText = dinner.theme ? `— ${dinner.theme} —` : '— Thème Libre —';
+            document.getElementById('modal-avg-score').innerText = calculateDinnerAvg(dinner).toFixed(1);
+
+            // Rendu conditionnel des plats du menu (masque si vide)
+            const menuContainer = document.getElementById('modal-menu-container');
+            let menuHtml = '';
+            const courses = [
+                { key: 'apero', label: "L'Apéritif" },
+                { key: 'entree', label: "L'Entrée" },
+                { key: 'plat', label: "Le Plat Principal" },
+                { key: 'dessert', label: "Le Dessert" }
+            ];
+
+            let hasPrevious = false;
+            courses.forEach(course => {
+                const val = dinner.menu?.[course.key];
+                if (val && val.trim() !== '') {
+                    menuHtml += `
+                        <div class="${hasPrevious ? 'border-t border-stone-800/60 pt-2' : ''}">
+                            <span class="block text-[9px] uppercase tracking-widest font-sans text-stone-400 mb-0.5">${course.label}</span>
+                            <p class="text-stone-300 italic">${val}</p>
+                        </div>
+                    `;
+                    hasPrevious = true;
+                }
+            });
+            if (!menuHtml) {
+                menuHtml = `<p class="text-stone-400 italic">Aucun détail de menu renseigné.</p>`;
+            }
+            menuContainer.innerHTML = menuHtml;
+
+            const editBtn = document.getElementById('modal-edit-btn');
+            const myCreatedIds = getMyCreatedDinnerIds();
+            if (isAdmin || myCreatedIds.includes(dinner.id)) {
+                editBtn.classList.remove('hidden');
+            } else {
+                editBtn.classList.add('hidden');
+            }
+
+            const votesList = document.getElementById('modal-votes-list');
+            votesList.innerHTML = '';
+            const votesCount = dinner.votes ? dinner.votes.length : 0;
+            document.getElementById('modal-votes-count').innerText = votesCount;
+
+            if (votesCount === 0) {
+                votesList.innerHTML = `<p class="text-xs text-stone-500 italic text-center py-2">Aucun bulletin enregistré pour l'instant.</p>`;
+            } else {
+                dinner.votes.forEach((v, idx) => {
+                    const voteAvg = calculateVoteAvg(v).toFixed(1);
+                    const voteItem = document.createElement('div');
+                    voteItem.className = "vote-item-box p-3 rounded-sm text-xs space-y-2 relative";
+                    voteItem.innerHTML = `
+                        <div class="flex justify-between items-center border-b border-stone-800/40 pb-1.5">
+                            <span class="font-serif font-medium text-champagne-200">${v.voter}</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="font-serif text-champagne-400">${voteAvg} / 10</span>
+                                ${isAdmin ? `
+                                    <button onclick="deleteVote('${dinner.id}', ${idx})" class="text-rose-400 hover:text-rose-300 ml-2" title="Supprimer cette note">
+                                        <i class="fa-solid fa-trash text-xs"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-1 text-[10px] text-stone-400">
+                            <div>Apéro: <span class="text-stone-200">${v.apero}</span></div>
+                            <div>Cuisine: <span class="text-stone-200">${v.repas}</span></div>
+                            <div>Ambiance: <span class="text-stone-200">${v.ambiance}</span></div>
+                            <div>Animation: <span class="text-stone-200">${v.activite}</span></div>
+                        </div>
+                        ${(v.comments?.apero || v.comments?.repas || v.comments?.ambiance || v.comments?.activite) ? `
+                            <div class="text-[10px] text-stone-300 italic pt-1 border-t border-stone-800/40 space-y-0.5">
+                                ${v.comments.apero ? `<p>• Apéro: "${v.comments.apero}"</p>` : ''}
+                                ${v.comments.repas ? `<p>• Cuisine: "${v.comments.repas}"</p>` : ''}
+                                ${v.comments.ambiance ? `<p>• Ambiance: "${v.comments.ambiance}"</p>` : ''}
+                                ${v.comments.activite ? `<p>• Animation: "${v.comments.activite}"</p>` : ''}
+                            </div>
+                        ` : ''}
+                    `;
+                    votesList.appendChild(voteItem);
+                });
+            }
+        }
+
+        // SWIPE / GESTION TACTILE SUR LA MODALE PARCHEMIN
+        let touchstartX = 0;
+        let touchendX = 0;
+
+        const parchmentModal = document.getElementById('parchment-container');
+        if (parchmentModal) {
+            parchmentModal.addEventListener('touchstart', e => {
+                touchstartX = e.changedTouches[0].screenX;
+            });
+            parchmentModal.addEventListener('touchend', e => {
+                touchendX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+        }
+
+        function handleSwipe() {
+            if (touchendX < touchstartX - 50) {
+                navigateDinner(1);
+            }
+            if (touchendX > touchstartX + 50) {
+                navigateDinner(-1);
+            }
+        }
+
+        window.closeModal = function() {
+            document.getElementById('dinner-details-modal').classList.add('hidden');
+            selectedDinnerForModal = null;
+        };
+    </script>
+</body>
+</html>
