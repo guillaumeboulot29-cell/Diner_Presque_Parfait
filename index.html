@@ -258,7 +258,7 @@
     </header>
 
     <!-- Zone Principale -->
-    <main class="flex-1 overflow-y-auto px-4 py-6 max-w-md mx-auto w-full space-y-6">
+    <main id="main-scroll-container" class="flex-1 overflow-y-auto px-4 py-6 max-w-md mx-auto w-full space-y-6">
 
         <!-- SECTION 1: ACCUEIL & SOIRÉE DU MOMENT -->
         <section id="sec-home" class="space-y-6 animate-fade-in">
@@ -899,6 +899,12 @@
             const activeNav = document.getElementById(`nav-${tabId}`);
             if (activeNav) activeNav.classList.add('nav-item-active');
 
+            // REMETTRE LE SCROLL TOUT EN HAUT DE LA PAGE LORS DU CHANGEMENT D'ONGLET
+            const mainContainer = document.getElementById('main-scroll-container');
+            if (mainContainer) {
+                mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
             renderCurrentView();
         };
 
@@ -1342,7 +1348,6 @@
             document.getElementById('modal-theme').innerText = dinner.theme ? `— ${dinner.theme} —` : '— Thème Libre —';
             document.getElementById('modal-avg-score').innerText = calculateDinnerAvg(dinner).toFixed(1);
 
-            // Rendu conditionnel des plats du menu (masque si vide)
             const menuContainer = document.getElementById('modal-menu-container');
             let menuHtml = '';
             const courses = [
@@ -1422,7 +1427,6 @@
             }
         }
 
-        // SWIPE / GESTION TACTILE SUR LA MODALE PARCHEMIN
         let touchstartX = 0;
         let touchendX = 0;
 
